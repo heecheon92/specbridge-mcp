@@ -1,0 +1,9 @@
+[
+  {
+    "id": "swagger-petstore",
+    "name": "Swagger Petstore Demo API",
+    "specUrl": "https://petstore3.swagger.io/api/v3/openapi.json",
+    "description": "Repository-local public demo backend for SpecBridge MCP.",
+    "domainHints": ["/pet", "/store", "/user"]
+  }
+]
