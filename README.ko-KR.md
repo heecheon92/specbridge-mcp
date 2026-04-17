@@ -202,6 +202,33 @@ command = "bash"
 
 host가 session state와 잘 맞지 않으면 `--stateless`로 다시 시도합니다.
 
+
+## AI 에이전트에게 요청할 수 있는 예시
+
+이 MCP 서버를 agent host에 연결한 뒤, 사용자는 자연어로 API 계약을 인식하는 질문이나 지시를 AI 에이전트에게 할 수 있습니다. 에이전트는 기억에 의존하거나 문서 페이지를 직접 스크래핑하지 않고, SpecBridge MCP 도구를 계약 데이터의 source of truth로 사용해야 합니다.
+
+예시:
+
+- "사용 가능한 백엔드 서비스가 뭐야?"
+- "`billing-service` 백엔드의 모든 엔드포인트를 보여줘."
+- "`/v1/users` 아래의 `POST` 엔드포인트만 보여줘."
+- "invoice나 payment와 관련된 엔드포인트를 찾아줘."
+- "`GET /users/{id}`에는 어떤 parameter가 필요해?"
+- "`POST /orders`에 어떤 request body를 보내야 해?"
+- "`GET /orders/{id}`의 response schema는 뭐야?"
+- "`CreateOrderRequest` schema의 TypeScript DTO를 생성해줘."
+- "프론트엔드 form을 수정하기 전에 API 계약에서 required field, nullable field, enum, format을 확인해줘."
+- "이 frontend payload가 `POST /students/bulk` 계약과 맞는지 비교하고 빠진 값을 알려줘."
+- "`PATCH /settings/attendance-policies`가 참조하는 component schema를 알려줘."
+- "기존 endpoint pattern을 바탕으로 refund 생성 endpoint 형태를 제안해줘. 단, 추론한 부분은 best-effort라고 표시해줘."
+
+에이전트에게 함께 지시하면 좋은 문장:
+
+- "API 계약 사실은 SpecBridge MCP만 사용해."
+- "먼저 `list_backends`를 호출하고, 이후 호출에는 반환된 `backendId`를 사용해."
+- "private spec URL을 직접 방문하지 말고 MCP 도구를 통해 계약 데이터를 읽어."
+- "`propose_new_endpoint` 출력은 source-of-truth 계약 데이터가 아니라 제안으로 다뤄."
+
 ## Tools
 
 Recommended flow:

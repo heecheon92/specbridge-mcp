@@ -202,6 +202,33 @@ Then connect your host to:
 
 If your host has trouble with session state, retry with `--stateless`.
 
+
+## Example prompts for AI agents
+
+After this MCP server is connected to an agent host, human users can ask their AI agents contract-aware questions in natural language. The agent should use SpecBridge MCP tools as the source of contract data instead of guessing from memory or scraping documentation pages directly.
+
+Examples:
+
+- "What backend services are available?"
+- "List all endpoints for the `billing-service` backend."
+- "Show me every `POST` endpoint under `/v1/users`."
+- "Find endpoints related to invoices or payments."
+- "What parameters does `GET /users/{id}` require?"
+- "What request body should I send to `POST /orders`?"
+- "What response schema comes back from `GET /orders/{id}`?"
+- "Generate TypeScript DTOs for the `CreateOrderRequest` schema."
+- "Before editing the frontend form, check the API contract for required fields, nullable fields, enums, and formats."
+- "Compare this frontend payload with the contract for `POST /students/bulk` and tell me what is missing."
+- "Which component schemas are referenced by `PATCH /settings/attendance-policies`?"
+- "Suggest a new endpoint shape for creating refunds based on existing endpoint patterns, but mark any inferred parts as best-effort."
+
+Useful agent instructions:
+
+- "Use SpecBridge MCP only for API contract facts."
+- "Call `list_backends` first, then use the returned `backendId` for later calls."
+- "Do not directly visit private spec URLs; read contract data through the MCP tools."
+- "Treat `propose_new_endpoint` output as a proposal, not as source-of-truth contract data."
+
 ## Tools
 
 Recommended flow:
