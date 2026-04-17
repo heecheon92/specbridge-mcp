@@ -1,6 +1,6 @@
 # SpecBridge MCP
 
-SpecBridge MCP is a **clone-and-own MCP starter** for exposing OpenAPI/Huma contract intelligence to AI agents. It turns OpenAPI/Huma specs into deterministic endpoint metadata, schemas, validation facts, referenced DTOs, and TypeScript declarations that agents can use before changing frontend or client code.
+SpecBridge MCP is a **clone-and-own MCP starter** for exposing API contract intelligence to AI agents. It works with OpenAPI documents directly and with Huma services through the OpenAPI documents Huma emits, turning those contracts into deterministic endpoint metadata, schemas, validation facts, referenced DTOs, and TypeScript declarations that agents can use before changing frontend or client code.
 
 This project is intentionally repository-first rather than npm-published: clone it, adapt the backend registry to your private or public specs, and register the local MCP server with your agent host. The implementation keeps the core unopinionated by avoiding downstream file mutation, using a neutral public demo backend, supporting multiple injected backends, and treating inferred helpers as best-effort rather than guarantees.
 
@@ -8,12 +8,17 @@ This project is intentionally repository-first rather than npm-published: clone 
 
 ## Brief history
 
-SpecBridge MCP started as a personal internal tool at SesameLab to improve the development cycle around backend API contracts. In practice, giving AI agents structured OpenAPI/Huma contract data through MCP reduced hallucinations compared with asking them to read API documentation pages directly.
+SpecBridge MCP started as a personal internal tool at SesameLab to improve the development cycle around backend API contracts, including Huma-backed services. In practice, giving AI agents structured contract data through MCP reduced hallucinations compared with asking them to read API documentation pages directly.
+
+## Huma support status
+
+Huma is supported through the OpenAPI-compatible documents that Huma services expose. That path has been smoke-tested with Huma-generated specs, JSON/YAML loading, and Unicode descriptions, but it is not yet a broad Huma conformance suite across many real services. Treat Huma support as intentionally supported and actively maturing rather than exhaustively proven.
 
 ## What it provides
 
-- Configurable backend registry for one or many OpenAPI/Huma-compatible specs
-- Zero-config demo backend using a real public OpenAPI URL
+- Configurable backend registry for one or many API contract specs
+- Huma-compatible support through Huma-generated OpenAPI JSON/YAML documents
+- Zero-config demo backend using a real public Swagger/OpenAPI URL
 - Spec loading and refresh with JSON/YAML support
 - Endpoint listing and filtering
 - Endpoint contract bundles with deterministic facts:
@@ -50,28 +55,36 @@ pnpm build
 
 ## Configure backends
 
-SpecBridge ships with `openapi.backends.json` pointing at a public demo API so the tools work immediately.
+SpecBridge includes a built-in public demo backend, so the tools work even when no local backend registry exists. Huma services are supported by pointing `specUrl` at the OpenAPI JSON/YAML document exposed by Huma, such as `/openapi.json`, `/openapi.yaml`, or your service-specific docs route.
 
-To use your own APIs, edit `openapi.backends.json` or point `OPENAPI_BACKENDS_FILE` at another JSON file.
+Local backend definitions live in `openapi.backends.json`. This file is intentionally ignored by Git because it may contain private, local, or environment-specific API URLs.
+
+The committed `openapi.backends.example.json` file contains a working Swagger Petstore demo backend. To create your local backend registry after cloning the repository:
+
+```bash
+cp openapi.backends.example.json openapi.backends.json
+```
+
+You can keep the copied demo backend to verify the MCP tools, replace it with an empty array (`[]`), or add your own backend definitions as needed:
 
 ```json
 [
   {
-    "id": "public-demo",
-    "name": "Public Demo API",
-    "specUrl": "https://petstore3.swagger.io/api/v3/openapi.json",
-    "description": "Public OpenAPI demo backend",
-    "domainHints": ["/pet", "/store", "/user"]
-  },
-  {
     "id": "local-service",
-    "name": "Local Service API",
+    "name": "Local Huma Service",
     "specUrl": "http://localhost:8080/openapi.json",
     "fallbackSpecUrls": ["http://localhost:8080/openapi.yaml"],
-    "description": "Your local service contract"
+    "description": "Your local Huma/OpenAPI contract",
+    "domainHints": ["/users", "/orders"]
   }
 ]
 ```
+
+Alternatively, point `OPENAPI_BACKENDS_FILE` at another JSON file or set `OPENAPI_BACKENDS` directly.
+
+### Naming note: Huma vs OpenAPI
+
+Huma emits OpenAPI-compatible contract documents, so some repository internals, tool names, and environment variables still use `openapi` in their names. Treat those names as references to the contract wire format, not as a limitation to non-Huma APIs. The MCP tools are intended for both plain OpenAPI specs and Huma-generated specs, with the Huma path still described as maturing until it has broader fixture coverage.
 
 ### Configuration precedence
 
@@ -174,7 +187,7 @@ Lists configured backend targets, the default backend ID, and optional domain hi
 
 ### `load_openapi_spec`
 
-Loads or refreshes an OpenAPI/Huma-compatible spec for a backend. Supports direct `specUrl` overrides.
+Loads or refreshes an OpenAPI-compatible contract document for a backend, including Huma-generated OpenAPI specs. Supports direct `specUrl` overrides.
 
 ### `list_api_endpoints`
 
@@ -190,7 +203,7 @@ Generates TypeScript DTO declarations from a component schema name and includes 
 
 ### `propose_new_endpoint`
 
-Returns a best-effort endpoint and DTO proposal aligned with patterns found in the current spec. Treat this as an agent aid, not a deterministic guarantee.
+Returns a best-effort endpoint and DTO proposal aligned with patterns found in the current contract spec. Treat this as an agent aid, not a deterministic guarantee.
 
 ## Development
 

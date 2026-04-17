@@ -20,7 +20,6 @@ const includedRootFiles = new Set([
   "biome.json",
   "mcp-server.sh",
   "openapi.backends.example.json",
-  "openapi.backends.json",
   "package.json",
   "tsconfig.json",
 ]);

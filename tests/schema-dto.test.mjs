@@ -265,19 +265,29 @@ test("simpleOperationSpec returns deterministic contract bundle with DTO declara
   assert.deepEqual(contract.validationFacts.schemas.Pet.required, ["id", "status"]);
   assert.deepEqual(contract.validationFacts.schemas.Pet.properties.status.enum, ["available", "adopted"]);
   assert.equal(contract.responses[0].statusCode, "200");
-  assert.match(contract.bestEffortHints.note, /deterministic OpenAPI facts/);
+  assert.match(contract.bestEffortHints.note, /deterministic OpenAPI\/Huma contract facts/);
 });
 
 test("backend registry supports repo-local config, config files, env precedence, and unknown backend errors", async () => {
-  assert.equal(
-    resolveBackend("swagger-petstore").description,
-    "Repository-local public demo backend for SpecBridge MCP.",
-  );
-
+  const originalCwd = process.cwd();
+  const repoDir = await mkdtemp(join(tmpdir(), "specbridge-repo-"));
   const dir = await mkdtemp(join(tmpdir(), "specbridge-config-"));
+  const repoUrl = specDataUrl({ openapi: "3.1.0", info: { title: "Repo", version: "1" }, paths: {} });
   const filePath = join(dir, "backends.json");
   const fileUrl = specDataUrl({ openapi: "3.1.0", info: { title: "File", version: "1" }, paths: {} });
   const envUrl = specDataUrl({ openapi: "3.1.0", info: { title: "Env", version: "1" }, paths: {} });
+
+  await writeFile(
+    join(repoDir, "openapi.backends.json"),
+    JSON.stringify([
+      {
+        id: "swagger-petstore",
+        name: "Repo Petstore",
+        specUrl: repoUrl,
+        description: "Repository-local public demo backend for SpecBridge MCP.",
+      },
+    ]),
+  );
 
   await writeFile(
     filePath,
@@ -296,6 +306,12 @@ test("backend registry supports repo-local config, config files, env precedence,
   );
 
   try {
+    process.chdir(repoDir);
+    assert.equal(
+      resolveBackend("swagger-petstore").description,
+      "Repository-local public demo backend for SpecBridge MCP.",
+    );
+
     await withEnv(
       {
         OPENAPI_BACKENDS_FILE: filePath,
@@ -317,6 +333,8 @@ test("backend registry supports repo-local config, config files, env precedence,
       },
     );
   } finally {
+    process.chdir(originalCwd);
+    await rm(repoDir, { recursive: true, force: true });
     await rm(dir, { recursive: true, force: true });
   }
 });

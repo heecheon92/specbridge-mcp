@@ -56,7 +56,7 @@ export function registerTools(server: McpServer): void {
   server.registerTool(
     "list_backends",
     {
-      description: "List configured backend targets available for OpenAPI tools.",
+      description: "List configured backend targets available for OpenAPI/Huma contract tools.",
       inputSchema: {},
     },
     async () => {
@@ -86,7 +86,8 @@ export function registerTools(server: McpServer): void {
   server.registerTool(
     "load_openapi_spec",
     {
-      description: "Load or refresh OpenAPI spec from a URL. Use this first if tools fail because docs path changed.",
+      description:
+        "Load or refresh an OpenAPI/Huma contract spec from a URL. Use this first if tools fail because docs path changed.",
       inputSchema: {
         backendId: z.string().min(1).describe("Required backend id from list_backends."),
         url: z.string().url().optional().describe("Optional docs URL override for this call."),
@@ -121,7 +122,7 @@ export function registerTools(server: McpServer): void {
   server.registerTool(
     "list_api_endpoints",
     {
-      description: "List endpoints from the currently loaded OpenAPI document.",
+      description: "List endpoints from the currently loaded OpenAPI/Huma contract document.",
       inputSchema: {
         backendId: z.string().min(1).describe("Required backend id from list_backends."),
         tag: z.string().optional().describe("Filter by tag name."),
@@ -174,7 +175,7 @@ export function registerTools(server: McpServer): void {
         "Return full contract for one endpoint: params, request schema, response schema, and referenced DTO names.",
       inputSchema: {
         backendId: z.string().min(1).describe("Required backend id from list_backends."),
-        path: z.string().min(1).describe("Exact endpoint path from OpenAPI, e.g. /users/{id}."),
+        path: z.string().min(1).describe("Exact endpoint path from the contract spec, e.g. /users/{id}."),
         method: z.enum(HTTP_METHODS).describe("HTTP method."),
         specUrl: z.string().url().optional().describe("Optional docs URL override for this call."),
       },
@@ -218,7 +219,7 @@ export function registerTools(server: McpServer): void {
     "generate_typescript_dto",
     {
       description:
-        "Generate TypeScript DTO type declarations from OpenAPI components schema. Includes referenced nested DTO types.",
+        "Generate TypeScript DTO type declarations from OpenAPI/Huma component schemas. Includes referenced nested DTO types.",
       inputSchema: {
         backendId: z.string().min(1).describe("Required backend id from list_backends."),
         schemaName: z.string().min(1).describe("Component schema name under #/components/schemas."),
@@ -257,7 +258,7 @@ export function registerTools(server: McpServer): void {
     "propose_new_endpoint",
     {
       description:
-        "Create a best-effort endpoint + DTO proposal aligned with deterministic patterns found in the current OpenAPI spec.",
+        "Create a best-effort endpoint + DTO proposal aligned with deterministic patterns found in the current OpenAPI/Huma contract spec.",
       inputSchema: {
         backendId: z.string().min(1).describe("Required backend id from list_backends."),
         resource: z.string().min(1).describe("Business resource name, e.g. pet, order, invoice."),

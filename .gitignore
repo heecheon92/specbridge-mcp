@@ -10,6 +10,9 @@ dist/
 .env.local
 .env.*.local
 
+# local OpenAPI backend config
+openapi.backends.json
+
 # logs
 npm-debug.log*
 yarn-debug.log*

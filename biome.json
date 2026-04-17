@@ -1,7 +1,17 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.4.12/schema.json",
   "files": {
-    "includes": ["src/**", "tests/**", "*.json", "*.md", "mcp-server.sh", "!build", "!node_modules", "!.omx"]
+    "includes": [
+      "src/**",
+      "tests/**",
+      "*.json",
+      "!openapi.backends.json",
+      "*.md",
+      "mcp-server.sh",
+      "!build",
+      "!node_modules",
+      "!.omx"
+    ]
   },
   "formatter": {
     "enabled": true,

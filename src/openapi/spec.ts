@@ -873,7 +873,7 @@ export function simpleOperationSpec(
       ),
     },
     bestEffortHints: {
-      note: "SpecBridge MCP prioritizes deterministic OpenAPI facts; downstream agents may derive naming or grouping hints from these fields.",
+      note: "SpecBridge MCP prioritizes deterministic OpenAPI/Huma contract facts; downstream agents may derive naming or grouping hints from these fields.",
     },
   };
 }
