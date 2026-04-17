@@ -33,6 +33,7 @@
   "files": [
     "build",
     "README.md",
+    "README.ko-KR.md",
     "openapi.backends.example.json"
   ],
   "bin": {

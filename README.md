@@ -1,5 +1,7 @@
 # SpecBridge MCP
 
+Translations: [한국어](README.ko-KR.md)
+
 SpecBridge MCP is a **clone-and-own MCP starter** for exposing API contract intelligence to AI agents. It works with OpenAPI documents directly and with Huma services through the OpenAPI documents Huma emits, turning those contracts into deterministic endpoint metadata, schemas, validation facts, referenced DTOs, and TypeScript declarations that agents can use before changing frontend or client code.
 
 This project is intentionally repository-first rather than npm-published: clone it, adapt the backend registry to your private or public specs, and register the local MCP server with your agent host. The implementation keeps the core unopinionated by avoiding downstream file mutation, using a neutral public demo backend, supporting multiple injected backends, and treating inferred helpers as best-effort rather than guarantees.
@@ -36,6 +38,7 @@ Huma is supported through the OpenAPI-compatible documents that Huma services ex
 ```text
 .
 ├── README.md                         # User-facing setup, configuration, tool, and extension docs
+├── README.ko-KR.md                   # Korean translation of README.md
 ├── AGENTS.md                         # Agent-facing project guide for future coding agents
 ├── package.json                      # pnpm scripts, runtime dependencies, and package metadata
 ├── tsconfig.json                     # Strict TypeScript build config; emits compiled JS into build/

@@ -17,6 +17,7 @@ const includedRootFiles = new Set([
   ".env.example",
   ".gitignore",
   "README.md",
+  "README.ko-KR.md",
   "biome.json",
   "mcp-server.sh",
   "openapi.backends.example.json",
